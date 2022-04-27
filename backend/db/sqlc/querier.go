@@ -13,7 +13,7 @@ type Querier interface {
 	CreateBook(ctx context.Context, book bookEntity.GoBook) (bookEntity.GoBook, error)
 	DeleteBook(ctx context.Context, id int8) error
 	UpdateBook(ctx context.Context, book bookEntity.GoBook) (bookEntity.GoBook, error)
-
+	GetBook(ctx context.Context, id int8) (bookEntity.GoBook, error)
 }
 
 var _ Querier = (*Queries)(nil)

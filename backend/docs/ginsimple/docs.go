@@ -89,6 +89,33 @@ const docTemplate = `{
             }
         },
         "/book/{id}": {
+            "get": {
+                "description": "read the book by id from gobooks.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "root"
+                ],
+                "summary": "get the book by ID.",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "bookEntity.GoBook ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/bookEntity.GoBook"
+                        }
+                    }
+                }
+            },
             "delete": {
                 "description": "delete the book from gobooks.",
                 "produces": [

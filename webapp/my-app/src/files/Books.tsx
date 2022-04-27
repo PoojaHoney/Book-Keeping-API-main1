@@ -20,78 +20,26 @@ import { spacing } from '@ui5/webcomponents-react-base';
 import { createPortal } from 'react-dom';
 import { Dialog, DialogDomRef } from "@ui5/webcomponents-react/dist/Dialog";
 import axios from 'axios';
-import BookDetailView from './BookDetails';
 
-// interface OwnerData {
-//     FirstName: string,
-//     LastName: string,
-//     Age: string,
-//     Email: string
-// }
-
-// interface BookData {
-//     Id: Int8Array,
-//     PublishedBy: string,
-//     PublishedOn: string,
-//     SponseredBy: string
-// }
-
-// interface Book {
-//     Title: string,
-//     Description: string,
-//     URL: string,
-//     Price: Float32Array,
-//     Author: OwnerData,
-//     BookData: BookData
-// }
-
-interface OwnerDataS {
-    firstname: string,
-    lastname: string,
-    age: string,
-    email: string
-}
-
-interface BookDataS {
-    publishedby: string,
-    publishedon: string,
-    sponseredby: string
-}
-
-interface BookS {
+interface iBook {
     id: string,
     title: string,
-    description: string,
-    url: string,
-    status: string,
-    price: string,
-    author: OwnerDataS,
-    bookdata: BookDataS
+    callnumber: string,
+    author: string,
+    publisher: string
 }
 
 
 const BooksView = () => {
-    const [oCreateBook, setCreateBookData] = useState<BookS>({
+    const [oCreateBook, setCreateBookData] = useState<iBook>({
         id: '0',
         title: '',
-        description: '',
-        url: '',
-        status: '',
-        price: '0',
-        author: {
-            firstname: '',
-            lastname: '',
-            age: '',
-            email: ''
-        },
-        bookdata: {
-            publishedby: '',
-            sponseredby: '',
-            publishedon: ''
-        }
+        callnumber: '',
+        author: '',
+        publisher: ''
     });
     const oCreateBookDialogRef = useRef<DialogDomRef>(null);
-    const [aBooksList, setBooksList] = useState<BookS[] | never[]>([])
+    const [aBooksList, setBooksList] = useState<iBook[] | never[]>([])
     const [sSelectedBookId, setSelectedBookId] = useState<string>()
     const MessageToast: any = useRef();
     const [sMessage, setMessage] = useState<string>("");
@@ -124,16 +72,16 @@ const BooksView = () => {
 
     useEffect(() => {
         axios.get("/books").then((oResponse) => {
-            setBooksList(oResponse.data || [])
+            setBooksList(oResponse.data.data || [])
         });
 
-        const interval = setInterval(() => {
-            axios.get("/allBooks").then((oResponse: any) => {
-                setBooksList(oResponse.data || [])
-            });
-        }, 15000);
+        // const interval = setInterval(() => {
+        //     axios.get("/allBooks").then((oResponse: any) => {
+        //         setBooksList(oResponse.data || [])
+        //     });
+        // }, 15000);
 
-        return () => clearInterval(interval);
+        // return () => clearInterval(interval);
     }, []);
 
     const onRefreshBookData = () => {
@@ -142,7 +90,7 @@ const BooksView = () => {
         });
     }
 
-    const onValidateEmail = (Email: string) => {
+    const onValIDateEmail = (Email: string) => {
         const sMailregex = /^\w+[\w-+\.]*\@\w+([-\.]\w+)*\.[a-zA-Z]{2,}$/;
         if (Email !== "") {
             if (!sMailregex.test(Email)) {
@@ -164,39 +112,26 @@ const BooksView = () => {
 
     const handleCreateBookOk = () => {
         const oCreateBookDetails: any = { ...oCreateBook }
-        oCreateBookDetails.price = parseFloat(oCreateBookDetails.price)
+        oCreateBookDetails.callnumber = parseInt(oCreateBookDetails.callnumber)
         oCreateBookDetails.id = parseInt(oCreateBookDetails.id)
-        oCreateBookDetails.author.age = parseInt(oCreateBookDetails.author.age)
-        axios.post("/bookDraft", oCreateBookDetails).then((oResponse: any) => {
+        axios.post("/book", oCreateBookDetails).then((oResponse: any) => {
             if (oResponse.data.message_Status === "success") {
-                const aBooks = [...aBooksList]
+                const aBooks = [...aBooksList] || []
                 aBooks.push(oResponse.data.data)
                 setBooksList(aBooks)
                 setCreateBookData({
                     id: '0',
                     title: '',
-                    description: '',
-                    url: '',
-                    status: '',
-                    price: '0',
-                    author: {
-                        firstname: '',
-                        lastname: '',
-                        age: '',
-                        email: ''
-                    },
-                    bookdata: {
-                        publishedby: '',
-                        sponseredby: '',
-                        publishedon: ''
-                    }
+                    callnumber: '',
+                    author: '',
+                    publisher: ''
                 });
                 handleCreateBookClose()
             }
             setMessage(oResponse.data.message);
             MessageToast.current.show();
         }, (oResponse: any) => {
-            setMessage(oResponse.response.data.error)
+            setMessage(oResponse.response.data)
             MessageToast.current.show()
         })
     }
@@ -213,10 +148,10 @@ const BooksView = () => {
     }
 
     const onDeleteSelectedBook = () => {
-        axios.delete(`/deleteBook/${sSelectedBookId}`).then((oResponse: any) => {
+        axios.delete(`/book/${sSelectedBookId}`).then((oResponse: any) => {
             setMessage(oResponse.data.message);
             MessageToast.current.show();
-            const aBooks = [...aBooksList]
+            const aBooks = [...aBooksList] || []
             const nIndex = aBooks.findIndex(oBook => JSON.stringify(oBook.id) === sSelectedBookId);
             if (nIndex > -1) {
                 aBooks.slice(1, nIndex)
@@ -226,13 +161,12 @@ const BooksView = () => {
     }
 
     const renderBooksList = () => {
-        const aBooks = [...aBooksList]
-        return aBooks.map((oBook: BookS) => {
+        const aBooks = [...aBooksList] || []
+        return aBooks.map((oBook: iBook) => {
             return (
                 <StandardListItem
-                    data-id={oBook.id}
-                    description={oBook.author.firstname + " " + oBook.author.lastname}
-                    additionalText={oBook.status}>
+                    data-ID={oBook.id}
+                    description={oBook.author}>
                     {oBook.title}
                 </StandardListItem>
             );
@@ -302,35 +236,35 @@ const BooksView = () => {
                                     placeholder="Title"
                                 />
                             </FormItem>
-                            <FormItem label="Description">
+                            <FormItem label="Call Number">
                                 <Input
                                     onChange={handleCreateBookInputChange}
                                     className="ad-input"
-                                    name="description"
-                                    value={oCreateBook?.description}
-                                    placeholder="Description"
+                                    name="callnumber"
+                                    value={oCreateBook?.callnumber}
+                                    placeholder="Call Number"
                                 />
                             </FormItem>
-                            <FormItem label="URL">
+                            <FormItem label="Author">
                                 <Input
                                     onChange={handleCreateBookInputChange}
                                     className="ad-input"
-                                    name="url"
-                                    value={oCreateBook?.url}
-                                    placeholder="URL"
+                                    name="author"
+                                    value={oCreateBook?.author}
+                                    placeholder="Author"
                                 />
                             </FormItem>
-                            <FormItem label="Price">
+                            <FormItem label="Published By">
                                 <Input
                                     onChange={handleCreateBookInputChange}
                                     className="ad-input"
-                                    name="price"
-                                    value={oCreateBook?.price}
-                                    placeholder="Price"
+                                    name="publisher"
+                                    value={oCreateBook?.publisher}
+                                    placeholder="Published By"
                                 />
                             </FormItem>
                         </FormGroup>
-                        <FormGroup titleText="Author Details">
+                        {/* <FormGroup TitleText="Author Details">
                             <FormItem label="First Name">
                                 <Input
                                     onChange={handleCreateBookInputChange}
@@ -363,14 +297,14 @@ const BooksView = () => {
                                     className="ad-input"
                                     name="author.email"
                                     type="Email"
-                                    valueState={onValidateEmail(oCreateBook?.author.email)}
+                                    valueState={onValIDateEmail(oCreateBook?.author.email)}
                                     value={oCreateBook?.author.email}
                                     placeholder="Email"
                                     onChange={handleCreateBookInputChange}
                                 />
                             </FormItem>
                         </FormGroup>
-                        <FormGroup titleText="Publisher Details">
+                        <FormGroup TitleText="Publisher Details">
                             <FormItem label="Published By">
                                 <Input
                                     onChange={handleCreateBookInputChange}
@@ -398,7 +332,7 @@ const BooksView = () => {
                                     placeholder="Sponsered By"
                                 />
                             </FormItem>
-                        </FormGroup>
+                        </FormGroup> */}
                     </Form>
                 </Dialog>,
                 document.body

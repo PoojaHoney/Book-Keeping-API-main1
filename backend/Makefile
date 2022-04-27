@@ -22,4 +22,7 @@ sqlc:
 swag:
     swag init -g main.go --output docs/ginsimple
 
+migrate:
+    migrate create -ext sql -dir db/migrations -seq <migration_name>
+
 .PHONY: postgres createdb dropdb migrateup migratedown run sqlc swag

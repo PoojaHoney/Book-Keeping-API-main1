@@ -78,3 +78,18 @@ func (q *Queries) UpdateBook(ctx context.Context, book bookEntity.GoBook) (bookE
 	)
 	return i, err
 }
+
+func (q *Queries) GetBook(ctx context.Context, id int8) (bookEntity.GoBook, error) {
+	row := q.db.QueryRowContext(ctx, `SELECT * FROM gobook
+		WHERE id = $1 LIMIT 1
+		`, id)
+	var i bookEntity.GoBook
+	err := row.Scan(
+		&i.ID,
+		&i.Title,
+		&i.Author,
+		&i.CallNumber,
+		&i.Publisher,
+	)
+	return i, err
+}

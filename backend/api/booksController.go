@@ -22,3 +22,7 @@ func DeleteBookController(server *Server, ctx *gin.Context, id int8) error {
 func UpdateBookController(server *Server, ctx *gin.Context, book bookEntity.GoBook) (bookEntity.GoBook, error) {
 	return server.store.UpdateBook(ctx, book)
 }
+
+func GetBookController(server *Server, ctx *gin.Context, id int8) (bookEntity.GoBook, error) {
+	return server.store.GetBook(ctx, id)
+}

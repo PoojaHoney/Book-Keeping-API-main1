@@ -1,0 +1,16 @@
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] GET    /books                    --> go_db_migration/book-keeping-api-main/api.(*Server).GetBooksList-fm (4 handlers)
+[GIN-debug] POST   /book                     --> go_db_migration/book-keeping-api-main/api.(*Server).CreateBook-fm (4 handlers)
+[GIN-debug] DELETE /book/:id                 --> go_db_migration/book-keeping-api-main/api.(*Server).DeleteBook-fm (4 handlers)
+[GIN-debug] PUT    /book/                    --> go_db_migration/book-keeping-api-main/api.(*Server).UpdateBook-fm (4 handlers)
+[GIN-debug] GET    /book/:id                 --> go_db_migration/book-keeping-api-main/api.(*Server).GetBook-fm (4 handlers)
+[GIN-debug] GET    /swagger/*any             --> github.com/swaggo/gin-swagger.CustomWrapHandler.func1 (4 handlers)
+127.0.0.1 - [Wed, 27 Apr 2022 23:40:19 IST] "GET /books HTTP/1.1 200 103.7741ms "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36" "
+127.0.0.1 - [Wed, 27 Apr 2022 23:40:22 IST] "GET /book/4 HTTP/1.1 200 38.8037ms "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36" "
+127.0.0.1 - [Wed, 27 Apr 2022 23:40:23 IST] "GET /book/4 HTTP/1.1 200 4.2425ms "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36" "
+[GIN-debug] redirecting request 307: /book/ --> /book/
+127.0.0.1 - [Wed, 27 Apr 2022 23:40:51 IST] "PUT /book/ HTTP/1.1 200 15.1175076s "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36" "
+127.0.0.1 - [Wed, 27 Apr 2022 23:40:58 IST] "GET /book/4 HTTP/1.1 200 5.2823ms "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36" "

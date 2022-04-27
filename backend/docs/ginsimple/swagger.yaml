@@ -94,6 +94,24 @@ paths:
       summary: delete the book from gobooks.
       tags:
       - root
+    get:
+      description: read the book by id from gobooks.
+      parameters:
+      - description: bookEntity.GoBook ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/bookEntity.GoBook'
+      summary: get the book by ID.
+      tags:
+      - root
   /books:
     get:
       description: read the books list.

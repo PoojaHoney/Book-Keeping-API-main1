@@ -9,6 +9,7 @@ import (
 	"go_db_migration/book-keeping-api-main/middleware"
 	"net/http"
 	"time"
+	// go get github.com/swaggo/swag/cmd/swag
 )
 
 type Server struct {
@@ -44,6 +45,7 @@ func (server *Server) setupRouter() {
 	server.router.POST("/book", server.CreateBook)
 	server.router.DELETE("/book/:id", server.DeleteBook)
 	server.router.PUT("/book/", server.UpdateBook)
+	server.router.GET("/book/:id", server.GetBook)
 
 	server.router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 }

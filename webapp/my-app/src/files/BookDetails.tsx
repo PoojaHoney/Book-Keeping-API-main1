@@ -15,27 +15,25 @@ import './Login.css';
 import { spacing } from '@ui5/webcomponents-react-base';
 import axios from 'axios';
 
-interface OwnerDataS {
-    firstname: string,
-    lastname: string,
-    age: string,
-    email: string
-}
+// interface OwnerDataS {
+//     firstname: string,
+//     lastname: string,
+//     age: string,
+//     email: string
+// }
 
-interface BookDataS {
-    publishedby: string,
-    publishedon: string,
-    sponseredby: string
-}
+// interface BookDataS {
+//     publishedby: string,
+//     publishedon: string,
+//     sponseredby: string
+// }
 
 interface BookS {
     id: string,
     title: string,
-    description: string,
-    url: string,
-    price: string,
-    author: OwnerDataS,
-    bookdata: BookDataS
+    callnumber: string,
+    author: string,
+    publisher: string
 }
 
 const BookDetailView = () => {
@@ -48,7 +46,7 @@ const BookDetailView = () => {
     const [sMessage, setMessage] = useState<string>("");
 
     useEffect(() => {
-        axios.get(`/bookById/${oParameters?.book_id}`).then((oResponse) => {
+        axios.get(`/book/${oParameters?.book_id}`).then((oResponse) => {
             setSelectedBook(oResponse.data.data || {})
             setUpdateSelectedBook(oResponse.data.data || {})
         });
@@ -90,7 +88,7 @@ const BookDetailView = () => {
     }
 
     const saveUpdatedBookChanges = () => {
-        axios.put(`/updateBook`, oUpdateSelectedBook).then((oResponse: any) => {
+        axios.put(`/book`, oUpdateSelectedBook).then((oResponse: any) => {
             setSelectedBook(oUpdateSelectedBook)
             setMessage(oResponse.data.message);
             MessageToast.current.show();
@@ -128,21 +126,21 @@ const BookDetailView = () => {
                             <Input
                                 onChange={handleUpdateBookChange}
                                 className="ad-input"
-                                name="title"
+                                name="Title"
                                 value={oUpdateSelectedBook?.title}
                                 placeholder="Title"
                             />
                         </FormItem>
-                        <FormItem label="Description">
+                        <FormItem label="Call Number">
                             <Input
                                 onChange={handleUpdateBookChange}
                                 className="ad-input"
-                                name="description"
-                                value={oUpdateSelectedBook?.description}
-                                placeholder="Description"
+                                name="callnumber"
+                                value={oUpdateSelectedBook?.callnumber}
+                                placeholder="Call Number"
                             />
                         </FormItem>
-                        <FormItem label="URL">
+                        {/* <FormItem label="URL">
                             <Input
                                 onChange={handleUpdateBookChange}
                                 className="ad-input"
@@ -159,19 +157,19 @@ const BookDetailView = () => {
                                 value={oUpdateSelectedBook?.price}
                                 placeholder="Price"
                             />
-                        </FormItem>
-                    </FormGroup>
-                    <FormGroup titleText="Author Details">
-                        <FormItem label="First Name">
+                        </FormItem> */}
+                        {/* </FormGroup> */}
+                        {/* <FormGroup titleText="Author Details"> */}
+                        <FormItem label="Author">
                             <Input
                                 onChange={handleUpdateBookChange}
                                 className="ad-input"
-                                name="author.firstname"
-                                value={oUpdateSelectedBook?.author.firstname}
-                                placeholder="First Name"
+                                name="author"
+                                value={oUpdateSelectedBook?.author}
+                                placeholder="Author"
                             />
                         </FormItem>
-                        <FormItem label="Last Name">
+                        {/* <FormItem label="Last Name">
                             <Input
                                 onChange={handleUpdateBookChange}
                                 className="ad-input"
@@ -199,19 +197,19 @@ const BookDetailView = () => {
                                 placeholder="Email"
                                 onChange={handleUpdateBookChange}
                             />
-                        </FormItem>
+                        </FormItem>*/}
                     </FormGroup>
-                    <FormGroup titleText="Publisher Details">
-                        <FormItem label="Published By">
-                            <Input
-                                onChange={handleUpdateBookChange}
-                                className="ad-input"
-                                name="bookdata.publishedby"
-                                value={oUpdateSelectedBook?.bookdata.publishedby}
-                                placeholder="Published By"
-                            />
-                        </FormItem>
-                        <FormItem label="Published On">
+                    {/* <FormGroup titleText="Publisher Details"> */}
+                    <FormItem label="Published By">
+                        <Input
+                            onChange={handleUpdateBookChange}
+                            className="ad-input"
+                            name="publisher"
+                            value={oUpdateSelectedBook?.publisher}
+                            placeholder="Published By"
+                        />
+                    </FormItem>
+                    {/* <FormItem label="Published On">
                             <Input
                                 onChange={handleUpdateBookChange}
                                 className="ad-input"
@@ -229,7 +227,7 @@ const BookDetailView = () => {
                                 placeholder="Sponsered By"
                             />
                         </FormItem>
-                    </FormGroup>
+                    </FormGroup> */}
                 </Form>
             </Page>
             <Toast ref={MessageToast}>{sMessage}</Toast>

@@ -132,3 +132,33 @@ func (server *Server) UpdateBook(ctx *gin.Context) {
 		"data": updated_book,
 	})
 }
+
+// GetBook godoc
+// @Summary get the book by ID.
+// @Description read the book by id from gobooks.
+// @Param id path integer true "bookEntity.GoBook ID"
+// @Tags root
+// @Produce json
+// @Success 200 {object} bookEntity.GoBook
+// @Router /book/{id} [get]
+func (server *Server) GetBook(ctx *gin.Context) {
+	id, err := strconv.Atoi(ctx.Copy().Param("id"))
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"error": err,
+		})
+		return
+	}
+
+	book, err := GetBookController(server, ctx, int8(id))
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"error": err,
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"data": book,
+	})
+}

@@ -20,11 +20,6 @@ interface loginDetails {
     password: string;
 }
 
-// interface LoggedIn {
-//     isLoggedIn: boolean
-// }
-
-// const Login = forwardRef((props: { submit?: (data: LoggedIn) => void }, ref: any) => {
 const Login = () => {
     const [oLoginDetails, setLoginDetails] = useState<loginDetails>({
         userName: '',
@@ -40,13 +35,6 @@ const Login = () => {
     };
 
     const handleLogin = () => {
-        // if (props.submit) {
-        //     localStorage.setItem('userName', oLoginDetails.userName)
-        //     localStorage.setItem('password', oLoginDetails.password)
-        //     props.submit({
-        //         isLoggedIn: true
-        //     })
-        // }
         if (oLoginDetails.password !== "" && oLoginDetails.userName !== "") {
             History.replace('/books')
             window.location.reload()
