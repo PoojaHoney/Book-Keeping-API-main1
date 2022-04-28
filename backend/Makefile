@@ -8,12 +8,12 @@ dropdb:
     docker exec -it postgres12 dropdb simple_book
 
 migrateup:
-    migrate -path db/migrations -database "postgresql://postgres:mysecretpassword@localhost:5432/simple_book?sslmode=disable" -verbose up                                                              
+    migrate -path db/migrations -database "postgresql://postgres:mysecretpassword@172.17.0.3:5432/simple_book?sslmode=disable" -verbose up                                                              
 
 migratedown:
-    migrate -path db/migrations -database "postgresql://postgres:mysecretpassword@localhost:5432/simple_book?sslmode=disable" -verbose down                                                           
+    migrate -path db/migrations -database "postgresql://postgres:mysecretpassword@172.17.0.3:5432/simple_book?sslmode=disable" -verbose down                                                           
 
-run:
+server:
 	go run main.go
 
 sqlc:

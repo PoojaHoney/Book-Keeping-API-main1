@@ -2,10 +2,12 @@ package main
 
 import (
 	"database/sql"
-	_ "github.com/lib/pq"
 	"go_db_migration/book-keeping-api-main/api"
 	dbSqlc "go_db_migration/book-keeping-api-main/db/sqlc"
+	"go_db_migration/book-keeping-api-main/util"
 	"log"
+
+	_ "github.com/lib/pq"
 )
 
 // @title Books Sample Go Application
@@ -24,8 +26,12 @@ import (
 // @BasePath /
 // @schemes http
 func main() {
-	connStr := "user=postgres dbname=simple_book password=mysecretpassword host=127.0.0.1 port=5432 sslmode=disable"
-	conn, err := sql.Open("postgres", connStr)
+	config, err := util.LoadConfig(".")
+	if err != nil {
+		log.Println("Cannot load the config", err)
+	}
+	// connStr := "user=postgres dbname=simple_book password=mysecretpassword host=172.17.0.3 port=5432 sslmode=disable"
+	conn, err := sql.Open(config.DBDriver, config.DBSource)
 	if err != nil {
 		log.Println("Connection Failed to Open")
 	} else {
@@ -34,5 +40,9 @@ func main() {
 	defer conn.Close()
 
 	store := dbSqlc.NewStore(conn)
-	api.NewServer(store)
+	server, _ := api.NewServer(store)
+	err = server.StartServer(config.ServerAddress)
+	if err != nil {
+		log.Fatal("cannot start server:", err)
+	}
 }

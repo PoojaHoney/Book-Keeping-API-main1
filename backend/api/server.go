@@ -7,8 +7,8 @@ import (
 	"go_db_migration/book-keeping-api-main/db/sqlc"
 	_ "go_db_migration/book-keeping-api-main/docs/ginsimple"
 	"go_db_migration/book-keeping-api-main/middleware"
-	"net/http"
-	"time"
+	// "net/http"
+	// "time"
 	// go get github.com/swaggo/swag/cmd/swag
 )
 
@@ -17,18 +17,18 @@ type Server struct {
 	router *gin.Engine
 }
 
-func NewServer(store db.Store) {
+func NewServer(store db.Store) (*Server, error){
 	bookMiddleware.SetUpLogOutput()
 	bookMiddleware.SetUpErrorLogOutput()
 	router := gin.New()
 	router.Use(gin.Recovery(), bookMiddleware.Logger(), bookMiddleware.BasicAuth())
 
-	r := &http.Server{
-		Addr:         ":6060",
-		Handler:      router,
-		ReadTimeout:  10 * time.Second,
-		WriteTimeout: 10 * time.Second,
-	}
+	// r := &http.Server{
+	// 	Addr:         ":6060",
+	// 	Handler:      router,
+	// 	ReadTimeout:  10 * time.Second,
+	// 	WriteTimeout: 10 * time.Second,
+	// }
 
 	server := &Server{
 		store:  store,
@@ -36,7 +36,12 @@ func NewServer(store db.Store) {
 	}
 
 	server.setupRouter()
-	r.ListenAndServe()
+	// r.ListenAndServe()
+	return server, nil
+}
+
+func (server *Server) StartServer(address string) error {
+	return server.router.Run(address)
 }
 
 func (server *Server) setupRouter() {
